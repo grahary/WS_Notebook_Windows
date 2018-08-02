@@ -4,9 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.*;
 import java.sql.*;
-import java.util.Properties;
 
 /**
  * Created by Cho, Wonsik on 2018-08-01.
@@ -65,19 +63,12 @@ public class Login {
             query = "SELECT pw FROM users WHERE id = \"" + id + "\";";
 
             // JDBC 로그인 정보 받아오기
-            try {
-                Properties properties = new Properties();
-                properties.load(new FileReader("src/jdbc.properties"));
+            GetJDBCProp.getJDBCProp();
 
-                dbDriver = properties.getProperty("MySQL.Driver");
-                dbURL = properties.getProperty("MySQL.URL");
-                dbID = properties.getProperty("DB.ID");
-                dbPW = properties.getProperty("DB.PW");
-            } catch (FileNotFoundException fnfe) {
-                fnfe.getMessage();
-            } catch (IOException ioe) {
-                ioe.getMessage();
-            }
+            dbDriver = GetJDBCProp.dbDriver;
+            dbURL = GetJDBCProp.dbURL;
+            dbID = GetJDBCProp.dbID;
+            dbPW = GetJDBCProp.dbPW;
 
             if (id.equals("")) {
                 JOptionPane.showMessageDialog(null, "ID를 입력하세요...");
