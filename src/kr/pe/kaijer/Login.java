@@ -14,6 +14,7 @@ import java.util.Properties;
 
 public class Login {
     private JPanel jPanel;
+    private static JFrame jFrame = new JFrame("WS Notebook");
 
     private JLabel lb_AppName;
     private JLabel lb_ID;
@@ -26,8 +27,8 @@ public class Login {
     private JButton btn_Register;
     private JButton btn_SearchPW;
 
-    public static String dbDriver, dbURL, dbID, dbPW;
-    public static String user_id = "";
+    private static String dbDriver, dbURL, dbID, dbPW;
+    private static String user_id = "";
 
     public Login() {
         btn_Login.addActionListener(new LoginButtonClicked());
@@ -35,9 +36,7 @@ public class Login {
         btn_SearchPW.addActionListener(new SearchPWButtonClicked());
     }
 
-    public static String login() {
-        JFrame jFrame = new JFrame("WS Notebook");
-
+    public static void login() {
         jFrame.setContentPane(new Login().jPanel);
         jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         jFrame.pack();
@@ -47,17 +46,6 @@ public class Login {
 
         jFrame.setLocation((screenSize.width - frameSize.width)/2, (screenSize.height - frameSize.height)/2);
         jFrame.setVisible(true);
-
-        while (user_id.equals("")) {
-
-        }
-
-        if (!user_id.equals("")) {
-            jFrame.setVisible(false);
-            return user_id;
-        }
-
-        return "";
     }
 
     // 로그인 버튼 클릭 이벤트
@@ -107,8 +95,8 @@ public class Login {
 
                         if (pw.equals(encoded_pw)) {
                             JOptionPane.showMessageDialog(null, "로그인 성공!");
-
-                            user_id = id;
+                            Main.user_id = id;
+                            jFrame.dispose();
                         } else {
                             JOptionPane.showMessageDialog(null, "비밀번호를 잘못 입력하셨습니다.");
                         }
@@ -139,6 +127,8 @@ public class Login {
         @Override
         public void actionPerformed(ActionEvent e) {
             System.out.println("Register Button Clicked!");
+            Register.register();
+            jFrame.dispose();
         }
     }
 

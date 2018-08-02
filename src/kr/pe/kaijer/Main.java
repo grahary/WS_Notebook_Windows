@@ -19,6 +19,14 @@ public class Main {
     }
 
     public static void main(String args[]) {
+        if (user_id.equals("")) {
+            Login.login();
+        }
+
+        while (user_id.equals("")) {
+
+        }
+
         JFrame jFrame = new JFrame("WS Notebook");
 
         jFrame.setContentPane(new Main().jPanel);
@@ -29,13 +37,8 @@ public class Main {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 
         jFrame.setLocation((screenSize.width - frameSize.width)/2, (screenSize.height - frameSize.height)/2);
+        jFrame.setVisible(true);
 
-        user_id = Login.login();
-
-        if (!user_id.equals("")) {
-            System.out.println(user_id);
-
-            jFrame.setVisible(true);
-        }
+        System.out.println(user_id);
     }
 }
