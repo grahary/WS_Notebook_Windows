@@ -7,6 +7,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.sql.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by Cho, Wonsik on 2018-08-02.
@@ -19,24 +21,18 @@ public class Register {
     private JLabel lb_Register;
     private JLabel lb_ID;
     private JLabel lb_Email;
-    private JLabel lb_at;
     private JLabel lb_PW;
 
     private JTextField tf_ID;
-    private JTextField tf_EmailName;
-    private JTextField tf_EmailDomain;
+    private JTextField tf_EmailAddress;
     private JPasswordField pf_PW;
 
-    private JButton btn_Check;
     private JButton btn_Register;
     private JButton btn_Cancel;
 
     private static String dbDriver, dbURL, dbID, dbPW;
 
-    private static boolean isIDCheck = false;
-
     public Register() {
-        btn_Check.addActionListener(new CheckButtonClicked());
         btn_Register.addActionListener(new RegisterButtonClicked());
         btn_Cancel.addActionListener(new CancelButtonClicked());
     }
@@ -68,46 +64,6 @@ public class Register {
         dbPW = GetJDBCProp.dbPW;
     }
 
-    // 중복확인 버튼 클릭 이벤트
-    private class CheckButtonClicked implements ActionListener {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            Connection connection = null;
-            Statement statement = null;
-
-            String query = "SELECT id FROM users WHERE id = \"" + tf_ID.getText() + "\";";
-
-            try {
-                Class.forName(dbDriver);
-                connection = DriverManager.getConnection(dbURL, dbID, dbPW);
-                statement = connection.createStatement();
-                ResultSet resultSet = statement.executeQuery(query);
-
-                if (resultSet.next()) {
-                    JOptionPane.showMessageDialog(null, "이미 존재하는 ID 입니다.\n다른 ID를 사용해 주세요.");
-                } else {
-                    JOptionPane.showMessageDialog(null, "사용 가능한 ID입니다.\n계속 진행해 주세요.");
-
-                    isIDCheck = true;
-                }
-            } catch (ClassNotFoundException cnfe) {
-                System.out.println("해당 클래스를 찾을 수 없습니다: " + cnfe.getMessage());
-            } catch (SQLException sqle) {
-                System.out.println(sqle.getMessage());
-            } finally {
-                try {
-                    statement.close();
-                } catch (Exception ignored) {
-
-                } try {
-                    connection.close();
-                } catch (Exception ignored) {
-
-                }
-            }
-        }
-    }
-
     // 가입 버튼 클릭 이벤트
     private class RegisterButtonClicked implements ActionListener {
         @Override
@@ -119,22 +75,48 @@ public class Register {
             String query;
 
             id = tf_ID.getText();
-            email = tf_EmailName.getText() + "@" + tf_EmailDomain;
+            email = tf_EmailAddress.getText();
             pw = new String(pf_PW.getPassword());
             encoded_pw = Encrypt.encode(id, pw, "SHA-512");
 
-            query = "";
+            query = "INSERT INTO users VALUES (\"" + id + "\", \"" + email + "\", \"" + encoded_pw + "\")";
 
             if (id.equals("")) {
                 JOptionPane.showMessageDialog(null, "ID를 입력하세요...");
-            } else if (!isIDCheck) {
-                JOptionPane.showMessageDialog(null, "ID 중복확인을 해주세요...");
             } else if (!isValidEmailAddress(email)) {
                 JOptionPane.showMessageDialog(null, "올바른 E-Mail 형식이 아닙니다...");
             } else if (pw.equals("")) {
                 JOptionPane.showMessageDialog(null, "PW를 입력하세요...");
-            } else {
-                System.out.println("회원가입");
+            } else if (isDuplicateID(id)) {
+                JOptionPane.showMessageDialog(null, "이미 사용중인 ID 입니다.\n다른 ID를 사용해 주세요.");
+            }  else {
+                try {
+                    Class.forName(dbDriver);
+                    connection = DriverManager.getConnection(dbURL, dbID, dbPW);
+                    statement = connection.createStatement();
+
+                    statement.executeUpdate(query);
+
+                    JOptionPane.showMessageDialog(null, "회원가입이 완료 되었습니다!");
+
+                    jFrame.dispose();
+                    Login.login();
+                } catch (ClassNotFoundException cnfe) {
+                    System.out.println("해당 클래스를 찾을 수 없습니다: " + cnfe.getMessage());
+                } catch (SQLException sqle) {
+                    System.out.println(sqle.getMessage());
+                } finally {
+                    try {
+                        statement.close();
+                    } catch (Exception ignored) {
+
+                    }
+                    try {
+                        connection.close();
+                    } catch (Exception ignored) {
+
+                    }
+                }
             }
         }
     }
@@ -148,12 +130,50 @@ public class Register {
         }
     }
 
+    // ID 중복 확인 [ 리턴 값이 거짓인 경우 사용 가능한 ID ]
+    public static boolean isDuplicateID(String id) {
+        Connection connection = null;
+        Statement statement = null;
+
+        String query = "SELECT id FROM users WHERE id = \"" + id + "\";";
+
+        try {
+            Class.forName(dbDriver);
+            connection = DriverManager.getConnection(dbURL, dbID, dbPW);
+            statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(query);
+
+            if (resultSet.next()) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (ClassNotFoundException cnfe) {
+            System.out.println("해당 클래스를 찾을 수 없습니다: " + cnfe.getMessage());
+        } catch (SQLException sqle) {
+            System.out.println(sqle.getMessage());
+        } finally {
+            try {
+                statement.close();
+            } catch (Exception ignored) {
+
+            } try {
+                connection.close();
+            } catch (Exception ignored) {
+
+            }
+        }
+
+        return true;
+    }
+
+    // E-Mail 주소 유효성 확인 [ 리턴 값이 참인 경우 유효한 E-Mail 주소 ]
     public static boolean isValidEmailAddress(String email) {
         String regex = "^[_a-zA-Z0-9-\\.]+@[\\.a-zA-Z0-9-]+\\.[a-zA-Z]+$";
-        if (email.equals(regex)) {
-            return true;
-        } else {
-            return false;
-        }
+
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(email);
+
+        return matcher.matches();
     }
 }
