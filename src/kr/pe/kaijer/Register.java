@@ -29,6 +29,7 @@ public class Register {
 
     private JButton btn_Register;
     private JButton btn_Cancel;
+    private JComboBox cb_SelectEmail;
 
     private static String dbDriver, dbURL, dbID, dbPW;
 
@@ -71,11 +72,19 @@ public class Register {
             Connection connection = null;
             Statement statement = null;
 
-            String id, email, pw, encoded_pw;
+            String id, email, emailDomain, pw, encoded_pw;
             String query;
 
             id = tf_ID.getText();
-            email = tf_EmailAddress.getText();
+
+            // E-Mail 도메인 선택시 도메인은 자동 입력
+            emailDomain = cb_SelectEmail.getSelectedItem().toString();
+            if (emailDomain.equals("직접 입력")) {
+                email = tf_EmailAddress.getText();
+            } else {
+                email = tf_EmailAddress.getText() + emailDomain;
+            }
+
             pw = new String(pf_PW.getPassword());
             encoded_pw = Encrypt.encode(id, pw, "SHA-512");
 

@@ -25,14 +25,9 @@ public class Main {
     private JButton btn_AddMemo;
 
     public static String user_id = "";
-    private static String[] comboBoxStr = {"제목", "태그"};
 
     public Main() {
         lb_UserID.setText(user_id);
-
-        for (String str : comboBoxStr) {
-            cb_searchType.addItem(str);
-        }
 
         btn_ChangePW.addActionListener(new ChangePWButtonClicked());
         btn_Logout.addActionListener(new LogoutButtonClicked());
@@ -66,7 +61,7 @@ public class Main {
     private class ChangePWButtonClicked implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
-            System.out.println("SearchPW Button Clicked!");
+            System.out.println("ChangePW Button Clicked!");
         }
     }
 
@@ -74,7 +69,7 @@ public class Main {
     private class LogoutButtonClicked implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
-            System.out.println("SearchPW Button Clicked!");
+            System.out.println("Logout Button Clicked!");
         }
     }
 
@@ -82,7 +77,7 @@ public class Main {
     private class SearchMemoButtonClicked implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
-            System.out.println("SearchPW Button Clicked!");
+            System.out.println("SearchMemo Button Clicked!");
         }
     }
 
@@ -90,7 +85,7 @@ public class Main {
     private class AddMemoButtonClicked implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
-            System.out.println("SearchPW Button Clicked!");
+            System.out.println("AddMemo Button Clicked!");
         }
     }
 }
