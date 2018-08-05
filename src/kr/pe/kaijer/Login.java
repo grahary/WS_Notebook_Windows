@@ -86,7 +86,7 @@ public class Login {
 
                         if (pw.equals(encoded_pw)) {
                             JOptionPane.showMessageDialog(null, "로그인 성공!");
-                            Main.user_id = id;
+                            MemoList.memoList(id);
                             jFrame.dispose();
                         } else {
                             JOptionPane.showMessageDialog(null, "비밀번호를 잘못 입력하셨습니다.");
@@ -117,7 +117,6 @@ public class Login {
     private class RegisterButtonClicked implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
-            System.out.println("Register Button Clicked!");
             Register.register();
             jFrame.dispose();
         }
