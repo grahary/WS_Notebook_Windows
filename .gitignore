@@ -89,3 +89,4 @@ hs_err_pid*
 WS_Notebook_Windows.iml
 
 *.origin
+src/META-INF/
