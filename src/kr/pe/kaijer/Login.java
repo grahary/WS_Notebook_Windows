@@ -26,7 +26,6 @@ public class Login {
     private JButton btn_SearchPW;
 
     private static String dbDriver, dbURL, dbID, dbPW;
-    private static String user_id = "";
 
     public Login() {
         btn_Login.addActionListener(new LoginButtonClicked());
@@ -86,8 +85,8 @@ public class Login {
 
                         if (pw.equals(encoded_pw)) {
                             JOptionPane.showMessageDialog(null, "로그인 성공!");
-                            MemoList.memoList(id);
                             jFrame.dispose();
+                            MemoList.memoList(id);
                         } else {
                             JOptionPane.showMessageDialog(null, "비밀번호를 잘못 입력하셨습니다.");
                         }

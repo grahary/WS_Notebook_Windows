@@ -5,6 +5,8 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.sql.*;
 
 /**
@@ -32,6 +34,8 @@ public class MemoList {
     private static String user_id;
     private static String dbDriver, dbURL, dbID, dbPW;
 
+    private static DBObject[] dbObjects;
+
     public MemoList() {
         lb_UserID.setText(user_id);
 
@@ -43,6 +47,7 @@ public class MemoList {
         };
         table_Memo.setModel(model);
 
+        table_Memo.addMouseListener(new tableItemClicked());
         btn_ChangePW.addActionListener(new ChangePWButtonClicked());
         btn_Logout.addActionListener(new LogoutButtonClicked());
         btn_SearchMemo.addActionListener(new SearchMemoButtonClicked());
@@ -70,7 +75,23 @@ public class MemoList {
         dbID = GetJDBCProp.dbID;
         dbPW = GetJDBCProp.dbPW;
 
-        select("x", null);
+        select("none", null);
+    }
+
+    // 테이블 아이템 클릭 이벤트
+    private class tableItemClicked extends MouseAdapter {
+        @Override
+        public void mouseClicked(MouseEvent e) {
+            int rowNum = table_Memo.getSelectedRow();
+
+            if (e.getClickCount() == 2) {
+                if (dbObjects[rowNum].is_enc) {
+                    System.out.println("\"" + dbObjects[rowNum].title + "\" 글은 잠겨있습니다.");
+                } else {
+                    System.out.println("\"" + dbObjects[rowNum].title + "\" 글은 잠겨있지않습니다.");
+                }
+            }
+        }
     }
 
     // PW 변경 버튼 클릭 이벤트
@@ -100,7 +121,7 @@ public class MemoList {
             } else if (str.equals("태그")) {
                 select("tag", tf_SearchMemo.getText());
             } else {
-                select("x", null);
+                select("none", null);
             }
         }
     }
@@ -109,7 +130,8 @@ public class MemoList {
     private class AddMemoButtonClicked implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
-            System.out.println("AddMemo Button Clicked!");
+            jFrame.dispose();
+            MemoAdd.memoAdd(user_id);
         }
     }
 
@@ -122,15 +144,15 @@ public class MemoList {
         Connection connection = null;
         Statement statement = null;
 
-        String query = "";
+        String query = null;
         model.setNumRows(0);
 
         switch (condition) {
-            case "x":
+            case "none":
                 query = "SELECT * FROM notebook WHERE user_id = \"" + user_id + "\";";
                 break;
             case "title":
-                query = "SELECT * FROM notebook WHERE user_id = \"" + user_id + "\" && title = \"" + searchText + "\";";
+                query = "SELECT * FROM notebook WHERE user_id = \"" + user_id + "\" && title LIKE \"%" + searchText + "%\";";
                 break;
             case "tag":
                 query = "SELECT * FROM notebook WHERE user_id = \"" + user_id + "\" && tag = \"" + searchText + "\";";
@@ -143,8 +165,30 @@ public class MemoList {
             statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(query);
 
+            int rowCnt = 0;
+            int cnt = 0;
+
+            if (resultSet.last()) {
+                rowCnt = resultSet.getRow();
+                resultSet.beforeFirst();
+            }
+
+            dbObjects = new DBObject[rowCnt];
+
+            for (int i = 0; i < dbObjects.length; i++) {
+                dbObjects[i] = new DBObject();
+            }
+
             while (resultSet.next()) {
                 model.addRow(new Object[]{resultSet.getString("title"), resultSet.getString("write_date"), resultSet.getString("tag")});
+
+                dbObjects[cnt].rowNum = cnt;
+                dbObjects[cnt].idx = resultSet.getInt("idx");
+                dbObjects[cnt].title = resultSet.getString("title");
+                dbObjects[cnt].is_enc = resultSet.getBoolean("is_enc");
+                dbObjects[cnt].enc_pw = resultSet.getString("enc_pw");
+
+                cnt++;
             }
 
             connection.close();
@@ -162,6 +206,18 @@ public class MemoList {
             } catch (Exception ignored) {
 
             }
+        }
+    }
+
+    private static class DBObject {
+        int rowNum;
+        int idx;
+        String title;
+        Boolean is_enc;
+        String enc_pw;
+
+        public DBObject() {
+
         }
     }
 }
