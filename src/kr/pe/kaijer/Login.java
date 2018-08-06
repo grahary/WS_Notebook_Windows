@@ -44,6 +44,14 @@ public class Login {
 
         jFrame.setLocation((screenSize.width - frameSize.width)/2, (screenSize.height - frameSize.height)/2);
         jFrame.setVisible(true);
+
+        // JDBC 로그인 정보 받아오기
+        GetJDBCProp.getJDBCProp();
+
+        dbDriver = GetJDBCProp.dbDriver;
+        dbURL = GetJDBCProp.dbURL;
+        dbID = GetJDBCProp.dbID;
+        dbPW = GetJDBCProp.dbPW;
     }
 
     // 로그인 버튼 클릭 이벤트
@@ -61,14 +69,6 @@ public class Login {
             encoded_pw = Encrypt.encode(id, pw, "SHA-512");
 
             query = "SELECT pw FROM users WHERE id = \"" + id + "\";";
-
-            // JDBC 로그인 정보 받아오기
-            GetJDBCProp.getJDBCProp();
-
-            dbDriver = GetJDBCProp.dbDriver;
-            dbURL = GetJDBCProp.dbURL;
-            dbID = GetJDBCProp.dbID;
-            dbPW = GetJDBCProp.dbPW;
 
             if (id.equals("")) {
                 JOptionPane.showMessageDialog(null, "ID를 입력하세요...");
