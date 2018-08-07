@@ -86,9 +86,24 @@ public class MemoList {
 
             if (e.getClickCount() == 2) {
                 if (dbObjects[rowNum].is_enc) {
-                    System.out.println("\"" + dbObjects[rowNum].title + "\" 글은 잠겨있습니다.");
+                    JPasswordField pf_EncPW = new JPasswordField();
+                    int okcxl = JOptionPane.showConfirmDialog(null, pf_EncPW, "이 글은 잠겨있습니다.\n암호를 입력하세요.", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+                    if (okcxl == JOptionPane.OK_OPTION) {
+                        String pw = new String(pf_EncPW.getPassword());
+                        String encoded_pw = Encrypt.encode(dbObjects[rowNum].title, pw, "SHA-512");
+
+                        if (encoded_pw.equals(dbObjects[rowNum].enc_pw)) {
+                            jFrame.dispose();
+                            MemoRead.memoRead(dbObjects[rowNum]);
+                        } else if(pw == null) {
+
+                        } else {
+                            JOptionPane.showMessageDialog(null, "암호가 틀렸습니다.");
+                        }
+                    }
                 } else {
-                    System.out.println("\"" + dbObjects[rowNum].title + "\" 글은 잠겨있지않습니다.");
+                    jFrame.dispose();
+                    MemoRead.memoRead(dbObjects[rowNum]);
                 }
             }
         }
@@ -206,18 +221,6 @@ public class MemoList {
             } catch (Exception ignored) {
 
             }
-        }
-    }
-
-    private static class DBObject {
-        int rowNum;
-        int idx;
-        String title;
-        Boolean is_enc;
-        String enc_pw;
-
-        public DBObject() {
-
         }
     }
 }
