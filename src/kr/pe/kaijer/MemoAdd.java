@@ -6,10 +6,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
 
 /**
  * Created by Cho, Wonsik on 2018-08-06.
@@ -33,7 +29,8 @@ public class MemoAdd {
     private JButton btn_Cancel;
 
     private static String user_id;
-    private static String dbDriver, dbURL, dbID, dbPW;
+
+    private static DBObject dbObject = new DBObject();
 
     public MemoAdd() {
         btn_Save.addActionListener(new SaveButtonClicked());
@@ -59,23 +56,12 @@ public class MemoAdd {
 
         jFrame.setLocation((screenSize.width - frameSize.width)/2, (screenSize.height - frameSize.height)/2);
         jFrame.setVisible(true);
-
-        // JDBC 로그인 정보 받아오기
-        GetJDBCProp.getJDBCProp();
-
-        dbDriver = GetJDBCProp.dbDriver;
-        dbURL = GetJDBCProp.dbURL;
-        dbID = GetJDBCProp.dbID;
-        dbPW = GetJDBCProp.dbPW;
     }
 
     // 저장 버튼 클릭 이벤트
     private class SaveButtonClicked implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
-            Connection connection = null;
-            Statement statement = null;
-
             String title = tf_Title.getText();
             String content = ta_Content.getText();
             String tag = tf_Tag.getText();
@@ -86,42 +72,25 @@ public class MemoAdd {
             Boolean is_enc = false;
             if (ck_isEncrypt.isSelected()) {
                 is_enc = true;
-                encoded_pw = Encrypt.encode(title, pw, "SHA-512");
+                encoded_pw = Encrypt.encode(user_id, pw, "SHA-512");
             }
-
-            String query = "INSERT INTO notebook(title, user_id, content, tag, is_enc, enc_pw) " +
-                    "VALUES (\"" + title + "\", \"" + user_id + "\", AES_ENCRYPT(\"" + content + "\", SHA2(\"" + encoded_pw + "\", 512)), \"" + tag + "\", " + is_enc + ", \"" + encoded_pw + "\");";
 
             if (title.equals("")) {
                 JOptionPane.showMessageDialog(null, "제목을 입력하세요...");
             } else if (ck_isEncrypt.isSelected() && pw.equals("")) {
                 JOptionPane.showMessageDialog(null, "암호를 입력하세요...");
             } else {
-                try {
-                    Class.forName(dbDriver);
-                    connection = DriverManager.getConnection(dbURL, dbID, dbPW);
-                    statement = connection.createStatement();
+                dbObject.user_id = user_id;
+                dbObject.title = title;
+                dbObject.content = content;
+                dbObject.tag = tag;
+                dbObject.is_enc = is_enc;
+                dbObject.enc_pw = encoded_pw;
 
-                    statement.executeUpdate(query);
+                DBProcess.dbInsert(dbObject);
 
-                    jFrame.dispose();
-                    MemoList.memoList(user_id);
-                } catch (ClassNotFoundException cnfe) {
-                    System.out.println("해당 클래스를 찾을 수 없습니다: " + cnfe.getMessage());
-                } catch (SQLException sqle) {
-                    System.out.println(sqle.getMessage());
-                } finally {
-                    try {
-                        statement.close();
-                    } catch (Exception ignored) {
-
-                    }
-                    try {
-                        connection.close();
-                    } catch (Exception ignored) {
-
-                    }
-                }
+                jFrame.dispose();
+                MemoRead.memoRead(dbObject);
             }
         }
     }

@@ -90,7 +90,7 @@ public class MemoList {
                     int okcxl = JOptionPane.showConfirmDialog(null, pf_EncPW, "이 글은 잠겨있습니다.\n암호를 입력하세요.", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
                     if (okcxl == JOptionPane.OK_OPTION) {
                         String pw = new String(pf_EncPW.getPassword());
-                        String encoded_pw = Encrypt.encode(dbObjects[rowNum].title, pw, "SHA-512");
+                        String encoded_pw = Encrypt.encode(user_id, pw, "SHA-512");
 
                         if (encoded_pw.equals(dbObjects[rowNum].enc_pw)) {
                             jFrame.dispose();

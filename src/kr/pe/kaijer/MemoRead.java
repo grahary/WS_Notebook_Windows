@@ -67,7 +67,8 @@ public class MemoRead {
     private class UpdateButtonClicked implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
-            System.out.println("수정 버튼 클릭!");
+            jFrame.dispose();
+            MemoUpdate.memoUpdate(dbObject);
         }
     }
 
@@ -75,7 +76,10 @@ public class MemoRead {
     private class DeleteButtonClicked implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
-            System.out.println("삭제 버튼 클릭!");
+            DBProcess.dbDelete(dbObject.idx);
+
+            jFrame.dispose();
+            MemoList.memoList(dbObject.user_id);
         }
     }
 
