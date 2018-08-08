@@ -1,4 +1,7 @@
-package kr.pe.kaijer;
+package kr.pe.kaijer.user;
+
+import kr.pe.kaijer.Encrypt;
+import kr.pe.kaijer.db.GetJDBCProp;
 
 import javax.swing.*;
 import java.awt.*;

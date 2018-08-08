@@ -1,4 +1,9 @@
-package kr.pe.kaijer;
+package kr.pe.kaijer.memo;
+
+import kr.pe.kaijer.db.DBObject;
+import kr.pe.kaijer.Encrypt;
+import kr.pe.kaijer.db.GetJDBCProp;
+import kr.pe.kaijer.Main;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;

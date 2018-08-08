@@ -1,4 +1,4 @@
-package kr.pe.kaijer;
+package kr.pe.kaijer.db;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;

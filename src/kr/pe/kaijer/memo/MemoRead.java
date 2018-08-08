@@ -1,4 +1,7 @@
-package kr.pe.kaijer;
+package kr.pe.kaijer.memo;
+
+import kr.pe.kaijer.db.DBObject;
+import kr.pe.kaijer.db.DBProcess;
 
 import javax.swing.*;
 import java.awt.*;
