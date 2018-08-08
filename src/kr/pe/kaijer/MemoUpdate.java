@@ -1,7 +1,5 @@
 package kr.pe.kaijer;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
