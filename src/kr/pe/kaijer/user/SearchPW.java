@@ -10,44 +10,40 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.sql.*;
+import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Created by Cho, Wonsik on 2018-08-02.
+ * Created by Cho, Wonsik on 2018-08-11.
  */
 
-public class Register {
+public class SearchPW {
     private JPanel jPanel;
     private static JFrame jFrame = new JFrame("WS Notebook");
 
-    private JLabel lb_Register;
     private JLabel lb_ID;
     private JLabel lb_Email;
-    private JLabel lb_PW;
-    private JLabel lb_PWRe;
     private JLabel lb_PWHint;
 
     private JTextField tf_ID;
-    private JTextField tf_EmailAddress;
+    private JTextField tf_Email;
     private JComboBox cb_SelectEmail;
-    private JPasswordField pf_PW;
-    private JPasswordField pf_PWRe;
     private JComboBox cb_PWHint;
     private JTextField tf_PWHint;
 
-    private JButton btn_Register;
+    private JButton btn_SearchPW;
     private JButton btn_Cancel;
 
     private static String dbDriver, dbURL, dbID, dbPW;
 
-    public Register() {
-        btn_Register.addActionListener(new RegisterButtonClicked());
+    public SearchPW() {
+        btn_SearchPW.addActionListener(new SearchPWButtonClicked());
         btn_Cancel.addActionListener(new CancelButtonClicked());
     }
 
-    public static void register() {
-        jFrame.setContentPane(new Register().jPanel);
+    public static void searchPW() {
+        jFrame.setContentPane(new SearchPW().jPanel);
         jFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         jFrame.addWindowListener(new WindowAdapter() {
             @Override
@@ -73,14 +69,14 @@ public class Register {
         dbPW = GetJDBCProp.dbPW;
     }
 
-    // 가입 버튼 클릭 이벤트
-    private class RegisterButtonClicked implements ActionListener {
+    // 비밀번호 찾기 버튼 클릭 이벤트
+    private class SearchPWButtonClicked implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
             Connection connection = null;
             Statement statement = null;
 
-            String id, email, emailDomain, pw, pwre, encoded_pw, hintA;
+            String id, email, emailDomain, hintA;
             int hintQ;
             String query;
 
@@ -89,46 +85,48 @@ public class Register {
             // E-Mail 도메인 선택시 도메인은 자동 입력
             emailDomain = cb_SelectEmail.getSelectedItem().toString();
             if (emailDomain.equals("직접 입력")) {
-                email = tf_EmailAddress.getText();
+                email = tf_Email.getText();
             } else {
-                email = tf_EmailAddress.getText() + emailDomain;
+                email = tf_Email.getText() + emailDomain;
             }
-
-            pw = new String(pf_PW.getPassword());
-            pwre = new String(pf_PWRe.getPassword());
-            encoded_pw = Encrypt.encode(id, pw, "SHA-512");
 
             hintQ = cb_PWHint.getSelectedIndex();
             hintA = tf_PWHint.getText();
 
-            query = "INSERT INTO users VALUES (\"" + id + "\", \"" + email + "\", \"" + encoded_pw + "\", " + hintQ + ", \"" + hintA +"\")";
+            query = "SELECT * FROM users WHERE id = \""+ id + "\" AND email = \"" + email + "\";";
 
             if (id.equals("")) {
                 JOptionPane.showMessageDialog(null, "ID를 입력하세요...");
             } else if (!isValidEmailAddress(email)) {
                 JOptionPane.showMessageDialog(null, "올바른 E-Mail 형식이 아닙니다...");
-            } else if (pw.equals("")) {
-                JOptionPane.showMessageDialog(null, "비밀번호를 입력하세요...");
-            } else if (pwre.equals("")) {
-                JOptionPane.showMessageDialog(null, "비밀번호를 한 번 더 입력하세요...");
-            } else if (!pw.equals(pwre)) {
-                JOptionPane.showMessageDialog(null, "비밀번호가 일치하지 않습니다...");
             } else if (hintA.equals("")) {
                 JOptionPane.showMessageDialog(null, "비밀번호 힌트를 입력해주세요...");
-            } else if (isDuplicateID(id)) {
-                JOptionPane.showMessageDialog(null, "이미 사용중인 ID 입니다.\n다른 ID를 사용해 주세요.");
-            }  else {
+            } else {
                 try {
                     Class.forName(dbDriver);
                     connection = DriverManager.getConnection(dbURL, dbID, dbPW);
                     statement = connection.createStatement();
+                    ResultSet resultSet = statement.executeQuery(query);
 
-                    statement.executeUpdate(query);
+                    if (resultSet.next()) {
+                        if (resultSet.getInt("hintq") == hintQ && resultSet.getString("hinta").equals(hintA)) {
+                            String newPW = createNewPW(id);
+                            String pw = Encrypt.encode(id, newPW, "SHA-512");
 
-                    JOptionPane.showMessageDialog(null, "회원가입이 완료 되었습니다!");
+                            statement.executeUpdate("UPDATE users SET pw = \"" + pw + "\" WHERE id = \"" + id + "\";");
 
-                    jFrame.dispose();
-                    Login.login();
+                            jFrame.dispose();
+                            SearchPWResult.searchPWResult(id, newPW);
+                        } else {
+                            JOptionPane.showMessageDialog(null, "비밀번호 힌트가 틀렸습니다...");
+                        }
+                    } else {
+                        JOptionPane.showMessageDialog(null, "ID나 E-Mail이 존재하지않습니다...");
+                    }
+
+
+                    //jFrame.dispose();
+                    //Login.login();
                 } catch (ClassNotFoundException cnfe) {
                     System.out.println("해당 클래스를 찾을 수 없습니다: " + cnfe.getMessage());
                 } catch (SQLException sqle) {
@@ -158,41 +156,31 @@ public class Register {
         }
     }
 
-    // ID 중복 확인 [ 리턴 값이 거짓인 경우 사용 가능한 ID ]
-    public static boolean isDuplicateID(String id) {
-        Connection connection = null;
-        Statement statement = null;
+    // 새로운 비밀번호 생성
+    public static String createNewPW(String id) {
+        StringBuffer buffer = new StringBuffer();
+        Random rand = new Random();
 
-        String query = "SELECT id FROM users WHERE id = \"" + id + "\";";
+        for (int i = 0; i < 10; i++) {
+            int idx = rand.nextInt(3);
 
-        try {
-            Class.forName(dbDriver);
-            connection = DriverManager.getConnection(dbURL, dbID, dbPW);
-            statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery(query);
-
-            if (resultSet.next()) {
-                return true;
-            } else {
-                return false;
-            }
-        } catch (ClassNotFoundException cnfe) {
-            System.out.println("해당 클래스를 찾을 수 없습니다: " + cnfe.getMessage());
-        } catch (SQLException sqle) {
-            System.out.println(sqle.getMessage());
-        } finally {
-            try {
-                statement.close();
-            } catch (Exception ignored) {
-
-            } try {
-                connection.close();
-            } catch (Exception ignored) {
-
+            switch (idx) {
+                case 0:
+                    // a-z
+                    buffer.append((char) ((int) (rand.nextInt(26)) + 97));
+                    break;
+                case 1:
+                    // A-Z
+                    buffer.append((char) ((int) (rand.nextInt(26)) + 65));
+                    break;
+                case 2:
+                    // 0-9
+                    buffer.append((rand.nextInt(10)));
+                    break;
             }
         }
 
-        return true;
+        return buffer.toString();
     }
 
     // E-Mail 주소 유효성 확인 [ 리턴 값이 참인 경우 유효한 E-Mail 주소 ]

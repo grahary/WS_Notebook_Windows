@@ -120,8 +120,8 @@ public class Login {
     private class RegisterButtonClicked implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
-            Register.register();
             jFrame.dispose();
+            Register.register();
         }
     }
 
@@ -129,7 +129,8 @@ public class Login {
     private class SearchPWButtonClicked implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
-            System.out.println("SearchPW Button Clicked!");
+            jFrame.dispose();
+            SearchPW.searchPW();
         }
     }
 }

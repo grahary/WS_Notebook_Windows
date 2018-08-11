@@ -4,6 +4,7 @@ import kr.pe.kaijer.db.DBObject;
 import kr.pe.kaijer.Encrypt;
 import kr.pe.kaijer.db.GetJDBCProp;
 import kr.pe.kaijer.Main;
+import kr.pe.kaijer.user.ChangePW;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -118,7 +119,8 @@ public class MemoList {
     private class ChangePWButtonClicked implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
-            System.out.println("ChangePW Button Clicked!");
+            jFrame.dispose();
+            ChangePW.changePW(user_id);
         }
     }
 
