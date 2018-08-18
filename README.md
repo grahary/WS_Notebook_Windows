@@ -1,7 +1,5 @@
 # WS_Notebook_Windows
 
-Java, Swing, JDBC¸¦ È°¿ëÇÑ ¸Þ¸ð °ü¸® ÇÁ·Î±×·¥
-
-
+Java, JavaFX, JDBCë¥¼ í™œìš©í•œ ë©”ëª¨ ê´€ë¦¬ í”„ë¡œê·¸ëž¨
 
 - - -
