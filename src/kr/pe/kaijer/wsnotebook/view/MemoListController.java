@@ -18,8 +18,8 @@ import kr.pe.kaijer.wsnotebook.MainApp;
 import kr.pe.kaijer.wsnotebook.model.Memo;
 import kr.pe.kaijer.wsnotebook.model.MemoDAO;
 import kr.pe.kaijer.wsnotebook.util.EncUtil;
-import static kr.pe.kaijer.wsnotebook.util.DialogUtil.InfoDialog;
-import static kr.pe.kaijer.wsnotebook.util.DialogUtil.PWInputDialog;
+import static kr.pe.kaijer.wsnotebook.util.DialogUtil.infoDialog;
+import static kr.pe.kaijer.wsnotebook.util.DialogUtil.pwInputDialog;
 
 public class MemoListController extends AnchorPane {
     @FXML private Label lbUserID;
@@ -27,6 +27,7 @@ public class MemoListController extends AnchorPane {
     @FXML private TextField tfSearchText;
     @FXML private Button btnSearch;
     @FXML private Button btnLogout;
+    @FXML private Button btnMemoAdd;
 
     @FXML private TableView<Memo> tableMemoList;
     @FXML private TableColumn<Memo, String> colTitle;
@@ -64,8 +65,9 @@ public class MemoListController extends AnchorPane {
         colTag.setCellValueFactory(cellData -> cellData.getValue().tagProperty());
 
         tableMemoList.setOnMouseClicked(event -> handleTableItemClicked(event));
-        btnSearch.setOnAction(event -> handleSearchAction(event));
-        btnLogout.setOnAction(event -> handleLogoutAction(event));
+        btnMemoAdd.setOnAction(event -> handleBtnMemoAddAction(event));
+        btnSearch.setOnAction(event -> handleBtnSearchAction(event));
+        btnLogout.setOnAction(event -> handleBtnLogoutAction(event));
     }
 
     /**
@@ -79,7 +81,7 @@ public class MemoListController extends AnchorPane {
 
         if (event.getClickCount() == 2 && rowNum >= 0) {
             if (memo.getIsEncrypt()) {
-                String pw = PWInputDialog();
+                String pw = pwInputDialog();
                 String encoded_pw = EncUtil.encode(userID, pw, "SHA-512");
 
                 if (encoded_pw.equals(memo.getEncryptPW())) {
@@ -92,7 +94,7 @@ public class MemoListController extends AnchorPane {
                         e.printStackTrace();
                     }
                 } else if (!encoded_pw.equals(memo.getEncryptPW()) && pw != null) {
-                    InfoDialog("비밀번호가 틀림");
+                    infoDialog("비밀번호가 틀림");
                 }
             } else {
                 MemoDAO.readMemo(memo);
@@ -112,7 +114,7 @@ public class MemoListController extends AnchorPane {
      *
      * 검색 조건과 텍스트로 쿼리를 실행해 해당하는 메모를 테이블에 출력
      */
-    private void handleSearchAction(ActionEvent event) {
+    private void handleBtnSearchAction(ActionEvent event) {
         String searchType, searchText;
 
         searchType = cbSearchType.getValue();
@@ -122,7 +124,12 @@ public class MemoListController extends AnchorPane {
         tableMemoList.setItems(memoList);
     }
 
-    private void handleLogoutAction(ActionEvent event) {
+    private void handleBtnMemoAddAction(ActionEvent event) {
+        mainApp.setUserID(userID);
+        mainApp.showModalContent("MemoAdd");
+    }
+
+    private void handleBtnLogoutAction(ActionEvent event) {
         mainApp.showLoginView();
     }
 }

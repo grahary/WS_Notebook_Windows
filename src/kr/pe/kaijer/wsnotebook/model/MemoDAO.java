@@ -9,6 +9,8 @@ package kr.pe.kaijer.wsnotebook.model;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
+import org.apache.commons.text.StringEscapeUtils;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.sql.ResultSet;
@@ -77,12 +79,23 @@ public class MemoDAO {
         try {
             while (rs.next()) {
                 BufferedReader br = new BufferedReader(new InputStreamReader(rs.getBinaryStream("content")));
-                String content = DBUtil.blobToSting(br);
+                String str = DBUtil.blobToSting(br);
+                String content = StringEscapeUtils.unescapeHtml4(str);
 
                 memo.setContent(content);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    public static void addMemo(Memo memo) {
+        String content = StringEscapeUtils.escapeHtml4(memo.getContent());
+
+        String query = "INSERT INTO notebook(title, user_id, content, tag, is_enc, enc_pw) " +
+                "VALUES (\"" + memo.getTitle() + "\", \"" + memo.getUserID() + "\", AES_ENCRYPT(\"" + content + "\", SHA2(\"" + memo.getEncryptPW() + "\", 512)), \"" +
+                memo.getTag() + "\", " + memo.getIsEncrypt() + ", \"" + memo.getEncryptPW() + "\");";
+
+        DBUtil.dbExecuteUpdate(query);
     }
 }

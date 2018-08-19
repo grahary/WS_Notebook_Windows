@@ -21,7 +21,7 @@ import java.sql.SQLException;
 import kr.pe.kaijer.wsnotebook.MainApp;
 import kr.pe.kaijer.wsnotebook.util.DBUtil;
 import kr.pe.kaijer.wsnotebook.util.EncUtil;
-import static kr.pe.kaijer.wsnotebook.util.DialogUtil.InfoDialog;
+import static kr.pe.kaijer.wsnotebook.util.DialogUtil.infoDialog;
 
 public class UserLoginController extends AnchorPane {
     @FXML private TextField tfID;
@@ -39,6 +39,7 @@ public class UserLoginController extends AnchorPane {
 
     @FXML
     void initialize() {
+        pfPW.setOnAction(event -> handleBtnLoginAction(event));
         btnLogin.setOnAction(event -> handleBtnLoginAction(event));
         btnRegister.setOnAction(event -> handleBtnRegisterAction(event));
         btnSearchPW.setOnAction(event -> handleBtnSearchPWAction(event));
@@ -57,9 +58,9 @@ public class UserLoginController extends AnchorPane {
         String query = "SELECT pw FROM users WHERE id = \"" + id + "\";";
 
         if (id.equals("")) {
-            InfoDialog("ID를 입력해 주세요!");
+            infoDialog("ID를 입력해 주세요!");
         } else if (pw.equals("")) {
-            InfoDialog("PW를 입력해 주세요!");
+            infoDialog("PW를 입력해 주세요!");
         } else {
             ResultSet rs = DBUtil.dbExecuteQuery(query);
 
@@ -69,14 +70,12 @@ public class UserLoginController extends AnchorPane {
                     String userPW = DBUtil.blobToSting(br);
 
                     if (userPW.equals(encodedPW)) {
-                        InfoDialog("로그인 성공!");
-
                         mainApp.showMemoListView(id);
                     } else {
-                        InfoDialog("PW를 잘못 입력하셨습니다!");
+                        infoDialog("PW를 잘못 입력하셨습니다!");
                     }
                 } else {
-                    InfoDialog("존재하지 않는 ID 입니다!");
+                    infoDialog("존재하지 않는 ID 입니다!");
                 }
             } catch (SQLException e) {
                 e.printStackTrace();

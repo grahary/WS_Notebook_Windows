@@ -6,25 +6,37 @@
 
 package kr.pe.kaijer.wsnotebook.view;
 
+import javafx.stage.Stage;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
-import javafx.stage.Stage;
 
 import kr.pe.kaijer.wsnotebook.model.Memo;
 
 public class MemoReadController {
-    private Stage dialogStage;
+    private Stage modalStage;
     private Memo memo;
 
     @FXML private TextField tfTitle;
     @FXML private TextField tfWriteDate;
     @FXML private WebView wvContent;
     @FXML private TextField tfTag;
+    @FXML private Button btnUpdate;
+    @FXML private Button btnDelete;
+    @FXML private Button btnClose;
 
-    public void setDialogStage(Stage dialogStage) {
-        this.dialogStage = dialogStage;
+    @FXML
+    void initialize() {
+        btnUpdate.setOnAction(event -> handleBtnUpdateAction(event));
+        btnDelete.setOnAction(event -> handleBtnDeleteAction(event));
+        btnClose.setOnAction(event -> handleBtnCloseAction(event));
+    }
+
+    public void setModalStage(Stage stage) {
+        this.modalStage = stage;
     }
 
     /**
@@ -41,5 +53,17 @@ public class MemoReadController {
 
         WebEngine webEngine = wvContent.getEngine();
         webEngine.loadContent(memo.getContent(), "text/html");
+    }
+
+    private void handleBtnUpdateAction(ActionEvent event) {
+
+    }
+
+    private void handleBtnDeleteAction(ActionEvent event) {
+
+    }
+
+    private void handleBtnCloseAction(ActionEvent event) {
+        modalStage.close();
     }
 }

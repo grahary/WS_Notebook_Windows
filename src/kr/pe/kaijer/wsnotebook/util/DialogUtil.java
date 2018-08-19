@@ -16,7 +16,7 @@ public class DialogUtil {
      *
      * @param text     다이얼로그에 표시될 텍스트
      */
-    public static void InfoDialog(String text) {
+    public static void infoDialog(String text) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("WS Notebook");
         alert.setHeaderText(null);
@@ -30,7 +30,7 @@ public class DialogUtil {
      *
      * @return     입력받은 비밀번호
      */
-    public static String PWInputDialog() {
+    public static String pwInputDialog() {
         PasswordDialog dialog = new PasswordDialog();
         Optional<String> result = dialog.showAndWait();
 
