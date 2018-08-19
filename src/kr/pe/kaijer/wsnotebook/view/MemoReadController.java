@@ -14,9 +14,13 @@ import javafx.scene.control.TextField;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 
+import kr.pe.kaijer.wsnotebook.MainApp;
 import kr.pe.kaijer.wsnotebook.model.Memo;
+import kr.pe.kaijer.wsnotebook.model.MemoDAO;
+import kr.pe.kaijer.wsnotebook.util.DialogUtil;
 
 public class MemoReadController {
+    private MainApp mainApp;
     private Stage modalStage;
     private Memo memo;
 
@@ -35,7 +39,8 @@ public class MemoReadController {
         btnClose.setOnAction(event -> handleBtnCloseAction(event));
     }
 
-    public void setModalStage(Stage stage) {
+    public void setModalStage(MainApp mainApp, Stage stage) {
+        this.mainApp = mainApp;
         this.modalStage = stage;
     }
 
@@ -56,11 +61,19 @@ public class MemoReadController {
     }
 
     private void handleBtnUpdateAction(ActionEvent event) {
-
+        mainApp.showModalContent("MemoUpdate");
+        modalStage.close();
     }
 
     private void handleBtnDeleteAction(ActionEvent event) {
+        if (DialogUtil.confirmDialog("정말 삭제하시겠습니까?")) {
+            MemoDAO.deleteMemo(memo.getIdx());
 
+            mainApp.showMemoListView(memo.getUserID());
+            modalStage.close();
+        } else {
+            System.out.println("삭제 NO");
+        }
     }
 
     private void handleBtnCloseAction(ActionEvent event) {

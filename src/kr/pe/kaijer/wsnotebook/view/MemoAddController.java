@@ -15,12 +15,14 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.web.HTMLEditor;
 
+import kr.pe.kaijer.wsnotebook.MainApp;
 import kr.pe.kaijer.wsnotebook.model.Memo;
 import kr.pe.kaijer.wsnotebook.model.MemoDAO;
 import kr.pe.kaijer.wsnotebook.util.EncUtil;
 import static kr.pe.kaijer.wsnotebook.util.DialogUtil.infoDialog;
 
 public class MemoAddController {
+    private MainApp mainApp;
     private Stage modalStage;
     private String userID;
 
@@ -38,7 +40,8 @@ public class MemoAddController {
         btnCancel.setOnAction(event -> handleBtnCancelAction(event));
     }
 
-    public void setModalStage(Stage stage) {
+    public void setModalStage(MainApp mainApp, Stage stage) {
+        this.mainApp = mainApp;
         this.modalStage = stage;
     }
 
@@ -79,11 +82,17 @@ public class MemoAddController {
 
             MemoDAO.addMemo(memo);
 
+            mainApp.showMemoListView(memo.getUserID());
+            mainApp.setMemo(memo);
+            mainApp.showModalContent("MemoRead");
             modalStage.close();
         }
     }
 
+    /**
+     * 취소 버튼 클릭 이벤트
+     */
     private void handleBtnCancelAction(ActionEvent event) {
-
+        modalStage.close();
     }
 }

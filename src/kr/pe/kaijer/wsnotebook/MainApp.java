@@ -20,10 +20,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import kr.pe.kaijer.wsnotebook.model.Memo;
-import kr.pe.kaijer.wsnotebook.view.MemoAddController;
-import kr.pe.kaijer.wsnotebook.view.MemoReadController;
-import kr.pe.kaijer.wsnotebook.view.UserLoginController;
-import kr.pe.kaijer.wsnotebook.view.MemoListController;
+import kr.pe.kaijer.wsnotebook.view.*;
 
 public class MainApp extends Application {
     private Stage stage;
@@ -125,14 +122,18 @@ public class MainApp extends Application {
             switch (fxml) {
                 case "MemoRead":
                     MemoReadController memoRead = loader.getController();
-                    memoRead.setModalStage(modalStage);
+                    memoRead.setModalStage(this, modalStage);
                     memoRead.setMemoReadView(memo);
                     break;
                 case "MemoAdd":
                     MemoAddController memoAdd = loader.getController();
-                    memoAdd.setModalStage(modalStage);
+                    memoAdd.setModalStage(this, modalStage);
                     memoAdd.setUserID(userID);
                     break;
+                case "MemoUpdate":
+                    MemoUpdateController memoUpdate = loader.getController();
+                    memoUpdate.setModalStage(this, modalStage);
+                    memoUpdate.setMemo(memo);
             }
         } catch (IOException e) {
             e.printStackTrace();

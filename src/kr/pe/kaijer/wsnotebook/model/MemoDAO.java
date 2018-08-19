@@ -68,6 +68,21 @@ public class MemoDAO {
     }
 
     /**
+     * 새로운 메모를 추가하는 메소드
+     *
+     * @param memo    데이터베이스에 추가할 메모 객체
+     */
+    public static void addMemo(Memo memo) {
+        String content = StringEscapeUtils.escapeHtml4(memo.getContent());
+
+        String query = "INSERT INTO notebook(title, user_id, content, tag, is_enc, enc_pw) " +
+                "VALUES (\"" + memo.getTitle() + "\", \"" + memo.getUserID() + "\", AES_ENCRYPT(\"" + content + "\", SHA2(\"" + memo.getEncryptPW() + "\", 512)), \"" +
+                memo.getTag() + "\", " + memo.getIsEncrypt() + ", \"" + memo.getEncryptPW() + "\");";
+
+        DBUtil.dbExecuteUpdate(query);
+    }
+
+    /**
      * 사용자가 선택한 메모의 내용을 불러오기 위한 메소드
      *
      * @param memo     사용자가 선택한 메모 객체
@@ -89,12 +104,24 @@ public class MemoDAO {
         }
     }
 
-    public static void addMemo(Memo memo) {
+    /**
+     *
+     */
+    public static void updateMemo(Memo memo) {
         String content = StringEscapeUtils.escapeHtml4(memo.getContent());
 
-        String query = "INSERT INTO notebook(title, user_id, content, tag, is_enc, enc_pw) " +
-                "VALUES (\"" + memo.getTitle() + "\", \"" + memo.getUserID() + "\", AES_ENCRYPT(\"" + content + "\", SHA2(\"" + memo.getEncryptPW() + "\", 512)), \"" +
-                memo.getTag() + "\", " + memo.getIsEncrypt() + ", \"" + memo.getEncryptPW() + "\");";
+        String query = "UPDATE notebook " +
+                "SET title = \"" + memo.getTitle() + "\", content = AES_ENCRYPT(\"" + content + "\", SHA2(\"" + memo.getEncryptPW() + "\", 512)), tag = \"" + memo.getTag() +
+                "\", is_enc = " + memo.getIsEncrypt() + ", enc_pw = \"" + memo.getEncryptPW() + "\" WHERE idx = " + memo.getIdx() + ";";
+
+        DBUtil.dbExecuteUpdate(query);
+    }
+
+    /**
+     *
+     */
+    public static void deleteMemo(int idx) {
+        String query = "DELETE FROM notebook WHERE idx = " + idx + ";";
 
         DBUtil.dbExecuteUpdate(query);
     }
