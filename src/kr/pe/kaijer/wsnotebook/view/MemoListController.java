@@ -25,8 +25,9 @@ public class MemoListController extends AnchorPane {
     @FXML private Label lbUserID;
     @FXML private ComboBox<String> cbSearchType;
     @FXML private TextField tfSearchText;
-    @FXML private Button btnSearch;
+    @FXML private Button btnChangePW;
     @FXML private Button btnLogout;
+    @FXML private Button btnSearch;
     @FXML private Button btnMemoAdd;
 
     @FXML private TableView<Memo> tableMemoList;
@@ -50,24 +51,26 @@ public class MemoListController extends AnchorPane {
         userID = id;
         lbUserID.setText("Welcome " + id + "!");
 
-        ObservableList<String> list = FXCollections.observableArrayList("전체보기", "제목", "태그");
-        cbSearchType.setItems(list);
-        cbSearchType.getSelectionModel().selectFirst();
-
         ObservableList<Memo> memoList = MemoDAO.searchMemo(userID, "전체보기", null);
         tableMemoList.setItems(memoList);
     }
 
     @FXML
     void initialize() {
+        ObservableList<String> list = FXCollections.observableArrayList("전체보기", "제목", "태그");
+        cbSearchType.setItems(list);
+        cbSearchType.getSelectionModel().selectFirst();
+
         colTitle.setCellValueFactory(cellData -> cellData.getValue().titleProperty());
         colWriteDate.setCellValueFactory(cellData -> cellData.getValue().writeDateProperty());
         colTag.setCellValueFactory(cellData -> cellData.getValue().tagProperty());
 
         tableMemoList.setOnMouseClicked(event -> handleTableItemClicked(event));
-        btnMemoAdd.setOnAction(event -> handleBtnMemoAddAction(event));
-        btnSearch.setOnAction(event -> handleBtnSearchAction(event));
+
+        btnChangePW.setOnAction(event -> handleBtnChangePWAction(event));
         btnLogout.setOnAction(event -> handleBtnLogoutAction(event));
+        btnSearch.setOnAction(event -> handleBtnSearchAction(event));
+        btnMemoAdd.setOnAction(event -> handleBtnMemoAddAction(event));
     }
 
     /**
@@ -87,24 +90,16 @@ public class MemoListController extends AnchorPane {
                 if (encoded_pw.equals(memo.getEncryptPW())) {
                     MemoDAO.readMemo(memo);
 
-                    try {
-                        mainApp.setMemo(memo);
-                        mainApp.showModalContent("MemoRead");
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                    mainApp.setMemo(memo);
+                    mainApp.showModalContent("MemoRead");
                 } else if (!encoded_pw.equals(memo.getEncryptPW()) && pw != null) {
                     infoDialog("비밀번호가 틀림");
                 }
             } else {
                 MemoDAO.readMemo(memo);
 
-                try {
-                    mainApp.setMemo(memo);
-                    mainApp.showModalContent("MemoRead");
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                mainApp.setMemo(memo);
+                mainApp.showModalContent("MemoRead");
             }
         }
     }
@@ -127,6 +122,11 @@ public class MemoListController extends AnchorPane {
     private void handleBtnMemoAddAction(ActionEvent event) {
         mainApp.setUserID(userID);
         mainApp.showModalContent("MemoAdd");
+    }
+
+    private void handleBtnChangePWAction(ActionEvent event) {
+        mainApp.setUserID(userID);
+        mainApp.showModalContent("UserChangePW");
     }
 
     private void handleBtnLogoutAction(ActionEvent event) {

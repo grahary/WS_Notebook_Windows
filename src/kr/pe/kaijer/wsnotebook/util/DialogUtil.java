@@ -6,8 +6,7 @@
 
 package kr.pe.kaijer.wsnotebook.util;
 
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
+import javafx.scene.control.*;
 
 import java.util.Optional;
 
@@ -24,6 +23,23 @@ public class DialogUtil {
         alert.setContentText(text);
 
         alert.showAndWait();
+    }
+
+    public static void changePWDialog(String newPW) {
+        Dialog dialog = new Dialog();
+        dialog.setTitle("WS Notebook");
+        dialog.setHeaderText("비밀번호가 다음과 같이 변경되었습니다.\n로그인 후에 반드시 비밀번호를 변경해주세요.");
+
+        ButtonType okButton = new ButtonType("확인", ButtonBar.ButtonData.OK_DONE);
+
+        TextField tfNewPW = new TextField();
+        tfNewPW.setText(newPW);
+        tfNewPW.setEditable(false);
+
+        dialog.getDialogPane().getButtonTypes().add(okButton);
+        dialog.getDialogPane().setContent(tfNewPW);
+
+        dialog.showAndWait();
     }
 
     public static Boolean confirmDialog(String text) {

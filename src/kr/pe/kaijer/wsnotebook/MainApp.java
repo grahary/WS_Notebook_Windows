@@ -120,6 +120,19 @@ public class MainApp extends Application {
             modalStage.show();
 
             switch (fxml) {
+                case "UserRegister":
+                    UserRegisterController userRegister = loader.getController();
+                    userRegister.setModalStage(modalStage);
+                    break;
+                case "UserSearchPW":
+                    UserSearchPWController userSearchPW = loader.getController();
+                    userSearchPW.setModalStage(modalStage);
+                    break;
+                case "UserChangePW":
+                    UserChangePWController userChangePW = loader.getController();
+                    userChangePW.setModalStage(modalStage);
+                    userChangePW.setUserID(userID);
+                    break;
                 case "MemoRead":
                     MemoReadController memoRead = loader.getController();
                     memoRead.setModalStage(this, modalStage);

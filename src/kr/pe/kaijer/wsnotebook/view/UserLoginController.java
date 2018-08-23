@@ -19,20 +19,22 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import kr.pe.kaijer.wsnotebook.MainApp;
+import kr.pe.kaijer.wsnotebook.model.User;
+import kr.pe.kaijer.wsnotebook.model.UserDAO;
 import kr.pe.kaijer.wsnotebook.util.DBUtil;
 import kr.pe.kaijer.wsnotebook.util.EncUtil;
 import static kr.pe.kaijer.wsnotebook.util.DialogUtil.infoDialog;
 
 public class UserLoginController extends AnchorPane {
+    private MainApp mainApp;
+
     @FXML private TextField tfID;
     @FXML private PasswordField pfPW;
 
     @FXML private Button btnLogin;
     @FXML private Button btnRegister;
     @FXML private Button btnSearchPW;
-
-    private MainApp mainApp;
-
+    
     public void setMainApp(MainApp mainApp) {
         this.mainApp = mainApp;
     }
@@ -55,41 +57,28 @@ public class UserLoginController extends AnchorPane {
         String pw = pfPW.getText();
         String encodedPW = EncUtil.encode(id, pw, "SHA-512");
 
-        String query = "SELECT pw FROM users WHERE id = \"" + id + "\";";
-
         if (id.equals("")) {
             infoDialog("ID를 입력해 주세요!");
         } else if (pw.equals("")) {
             infoDialog("PW를 입력해 주세요!");
         } else {
-            ResultSet rs = DBUtil.dbExecuteQuery(query);
+            User user = new User();
+            user.setId(id);
+            user.setPw(encodedPW);
 
-            try {
-                if (rs.next()) {
-                    BufferedReader br = new BufferedReader(new InputStreamReader(rs.getBinaryStream("pw")));
-                    String userPW = DBUtil.blobToSting(br);
-
-                    if (userPW.equals(encodedPW)) {
-                        mainApp.showMemoListView(id);
-                    } else {
-                        infoDialog("PW를 잘못 입력하셨습니다!");
-                    }
-                } else {
-                    infoDialog("존재하지 않는 ID 입니다!");
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
+            if (UserDAO.login(user)) {
+                mainApp.showMemoListView(id);
             }
         }
     }
 
     /** 회원가입 버튼 클릭시 이벤트 */
     private void handleBtnRegisterAction(ActionEvent event) {
-
+        mainApp.showModalContent("UserRegister");
     }
 
     /** 비밀번호 찾기 버튼 클릭시 이벤트 */
     private void handleBtnSearchPWAction(ActionEvent event) {
-
+        mainApp.showModalContent("UserSearchPW");
     }
 }

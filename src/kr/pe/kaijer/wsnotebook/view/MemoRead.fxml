@@ -33,9 +33,9 @@
             <TextField fx:id="tfWriteDate" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="1" />
             <Label text="태그" GridPane.halignment="CENTER" GridPane.rowIndex="3" />
             <TextField fx:id="tfTag" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-            <ScrollPane GridPane.columnSpan="2" GridPane.rowIndex="2">
+            <ScrollPane fitToHeight="true" fitToWidth="true" GridPane.columnSpan="2" GridPane.rowIndex="2">
                <content>
-                  <WebView fx:id="wvContent" minHeight="-1.0" minWidth="-1.0" prefHeight="400.0" prefWidth="600.0" />
+                  <WebView fx:id="wvContent" minHeight="-1.0" minWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" />
                </content>
             </ScrollPane>
             <ButtonBar prefHeight="40.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="4">

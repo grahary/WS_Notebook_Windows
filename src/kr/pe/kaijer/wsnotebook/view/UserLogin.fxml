@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="kr.pe.kaijer.wsnotebook.view.UserLoginController">
+<AnchorPane xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="kr.pe.kaijer.wsnotebook.view.UserLoginController">
    <children>
       <GridPane layoutX="14.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <columnConstraints>
@@ -33,7 +33,7 @@
             </Label>
             <Label text="ID" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
             <Label text="PW" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
-            <TextField fx:id="tfID" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1" />
+            <TextField fx:id="tfID" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1" />
             <PasswordField fx:id="pfPW" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="2" />
             <Button fx:id="btnLogin" mnemonicParsing="false" text="로그인" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.rowSpan="2" GridPane.valignment="CENTER" />
             <Button fx:id="btnRegister" mnemonicParsing="false" text="회원가입" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="3" />

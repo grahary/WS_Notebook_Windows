@@ -6,6 +6,7 @@
 
 package kr.pe.kaijer.wsnotebook.view;
 
+import javafx.scene.web.HTMLEditor;
 import javafx.stage.Stage;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -71,8 +72,6 @@ public class MemoReadController {
 
             mainApp.showMemoListView(memo.getUserID());
             modalStage.close();
-        } else {
-            System.out.println("삭제 NO");
         }
     }
 
