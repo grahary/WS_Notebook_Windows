@@ -20,7 +20,14 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import kr.pe.kaijer.wsnotebook.model.Memo;
-import kr.pe.kaijer.wsnotebook.view.*;
+import kr.pe.kaijer.wsnotebook.view.memo.MemoAddController;
+import kr.pe.kaijer.wsnotebook.view.memo.MemoListController;
+import kr.pe.kaijer.wsnotebook.view.memo.MemoReadController;
+import kr.pe.kaijer.wsnotebook.view.memo.MemoUpdateController;
+import kr.pe.kaijer.wsnotebook.view.user.ChangePWController;
+import kr.pe.kaijer.wsnotebook.view.user.LoginController;
+import kr.pe.kaijer.wsnotebook.view.user.RegisterController;
+import kr.pe.kaijer.wsnotebook.view.user.SearchPWController;
 
 public class MainApp extends Application {
     private Stage stage;
@@ -42,7 +49,7 @@ public class MainApp extends Application {
      */
     public void showLoginView() {
         try {
-            UserLoginController login = (UserLoginController)replaceSceneContent("UserLogin");
+            LoginController login = (LoginController)replaceSceneContent("user/Login");
             login.setMainApp(this);
         } catch (Exception e) {
             e.printStackTrace();
@@ -56,7 +63,7 @@ public class MainApp extends Application {
      */
     public void showMemoListView(String loggedUserID) {
         try {
-            MemoListController memoList = (MemoListController)replaceSceneContent("MemoList");
+            MemoListController memoList = (MemoListController)replaceSceneContent("memo/MemoList");
             memoList.setMainApp(this);
             memoList.userLogged(loggedUserID);
         } catch (Exception e) {
@@ -120,30 +127,30 @@ public class MainApp extends Application {
             modalStage.show();
 
             switch (fxml) {
-                case "UserRegister":
-                    UserRegisterController userRegister = loader.getController();
-                    userRegister.setModalStage(modalStage);
+                case "user/Register":
+                    RegisterController register = loader.getController();
+                    register.setModalStage(modalStage);
                     break;
-                case "UserSearchPW":
-                    UserSearchPWController userSearchPW = loader.getController();
-                    userSearchPW.setModalStage(modalStage);
+                case "user/SearchPW":
+                    SearchPWController searchPW = loader.getController();
+                    searchPW.setModalStage(modalStage);
                     break;
-                case "UserChangePW":
-                    UserChangePWController userChangePW = loader.getController();
-                    userChangePW.setModalStage(modalStage);
-                    userChangePW.setUserID(userID);
+                case "user/ChangePW":
+                    ChangePWController changePW = loader.getController();
+                    changePW.setModalStage(modalStage);
+                    changePW.setUserID(userID);
                     break;
-                case "MemoRead":
+                case "memo/MemoRead":
                     MemoReadController memoRead = loader.getController();
                     memoRead.setModalStage(this, modalStage);
                     memoRead.setMemoReadView(memo);
                     break;
-                case "MemoAdd":
+                case "memo/MemoAdd":
                     MemoAddController memoAdd = loader.getController();
                     memoAdd.setModalStage(this, modalStage);
                     memoAdd.setUserID(userID);
                     break;
-                case "MemoUpdate":
+                case "memo/MemoUpdate":
                     MemoUpdateController memoUpdate = loader.getController();
                     memoUpdate.setModalStage(this, modalStage);
                     memoUpdate.setMemo(memo);

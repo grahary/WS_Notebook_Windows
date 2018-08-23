@@ -1,10 +1,10 @@
 /*
- * UserChangePWController.java
+ * ChangePWController.java
  *
  * Created by Cho, Wonsik on 2018-08-23.
  */
 
-package kr.pe.kaijer.wsnotebook.view;
+package kr.pe.kaijer.wsnotebook.view.user;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -15,7 +15,7 @@ import kr.pe.kaijer.wsnotebook.model.User;
 import kr.pe.kaijer.wsnotebook.model.UserDAO;
 import kr.pe.kaijer.wsnotebook.util.DialogUtil;
 
-public class UserChangePWController {
+public class ChangePWController {
     private Stage modalStage;
     private String userID;
 

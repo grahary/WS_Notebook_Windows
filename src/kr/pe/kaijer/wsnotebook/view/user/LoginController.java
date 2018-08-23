@@ -1,10 +1,10 @@
 /*
- * UserLoginController.java
+ * LoginController.java
  *
  * Created by Cho, Wonsik on 2018-08-18.
  */
 
-package kr.pe.kaijer.wsnotebook.view;
+package kr.pe.kaijer.wsnotebook.view.user;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -25,7 +25,7 @@ import kr.pe.kaijer.wsnotebook.util.DBUtil;
 import kr.pe.kaijer.wsnotebook.util.EncUtil;
 import static kr.pe.kaijer.wsnotebook.util.DialogUtil.infoDialog;
 
-public class UserLoginController extends AnchorPane {
+public class LoginController extends AnchorPane {
     private MainApp mainApp;
 
     @FXML private TextField tfID;
@@ -74,11 +74,11 @@ public class UserLoginController extends AnchorPane {
 
     /** 회원가입 버튼 클릭시 이벤트 */
     private void handleBtnRegisterAction(ActionEvent event) {
-        mainApp.showModalContent("UserRegister");
+        mainApp.showModalContent("user/Register");
     }
 
     /** 비밀번호 찾기 버튼 클릭시 이벤트 */
     private void handleBtnSearchPWAction(ActionEvent event) {
-        mainApp.showModalContent("UserSearchPW");
+        mainApp.showModalContent("user/SearchPW");
     }
 }

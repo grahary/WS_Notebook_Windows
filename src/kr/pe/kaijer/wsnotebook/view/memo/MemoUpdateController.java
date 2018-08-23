@@ -4,7 +4,7 @@
  * Created by Cho, Wonsik on 2018-08-19.
  */
 
-package kr.pe.kaijer.wsnotebook.view;
+package kr.pe.kaijer.wsnotebook.view.memo;
 
 import javafx.stage.Stage;
 import javafx.event.ActionEvent;
@@ -102,7 +102,7 @@ public class MemoUpdateController {
 
             MemoDAO.updateMemo(memo);
 
-            mainApp.showModalContent("MemoRead");
+            mainApp.showModalContent("memo/MemoRead");
             modalStage.close();
         }
     }
@@ -111,7 +111,7 @@ public class MemoUpdateController {
      * 취소 버튼 클릭 이벤트
      */
     private void handleBtnCancelAction(ActionEvent event) {
-        mainApp.showModalContent("MemoRead");
+        mainApp.showModalContent("memo/MemoRead");
         modalStage.close();
     }
 }

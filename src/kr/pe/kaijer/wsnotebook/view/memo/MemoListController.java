@@ -4,7 +4,7 @@
  * Created by Cho, Wonsik on 2018-08-18.
  */
 
-package kr.pe.kaijer.wsnotebook.view;
+package kr.pe.kaijer.wsnotebook.view.memo;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -91,7 +91,7 @@ public class MemoListController extends AnchorPane {
                     MemoDAO.readMemo(memo);
 
                     mainApp.setMemo(memo);
-                    mainApp.showModalContent("MemoRead");
+                    mainApp.showModalContent("memo/MemoRead");
                 } else if (!encoded_pw.equals(memo.getEncryptPW()) && pw != null) {
                     infoDialog("비밀번호가 틀림");
                 }
@@ -99,7 +99,7 @@ public class MemoListController extends AnchorPane {
                 MemoDAO.readMemo(memo);
 
                 mainApp.setMemo(memo);
-                mainApp.showModalContent("MemoRead");
+                mainApp.showModalContent("memo/MemoRead");
             }
         }
     }
@@ -121,12 +121,12 @@ public class MemoListController extends AnchorPane {
 
     private void handleBtnMemoAddAction(ActionEvent event) {
         mainApp.setUserID(userID);
-        mainApp.showModalContent("MemoAdd");
+        mainApp.showModalContent("memo/MemoAdd");
     }
 
     private void handleBtnChangePWAction(ActionEvent event) {
         mainApp.setUserID(userID);
-        mainApp.showModalContent("UserChangePW");
+        mainApp.showModalContent("user/ChangePW");
     }
 
     private void handleBtnLogoutAction(ActionEvent event) {

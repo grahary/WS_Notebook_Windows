@@ -4,9 +4,8 @@
  * Created by Cho, Wonsik on 2018-08-18.
  */
 
-package kr.pe.kaijer.wsnotebook.view;
+package kr.pe.kaijer.wsnotebook.view.memo;
 
-import javafx.scene.web.HTMLEditor;
 import javafx.stage.Stage;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -62,7 +61,7 @@ public class MemoReadController {
     }
 
     private void handleBtnUpdateAction(ActionEvent event) {
-        mainApp.showModalContent("MemoUpdate");
+        mainApp.showModalContent("memo/MemoUpdate");
         modalStage.close();
     }
 
