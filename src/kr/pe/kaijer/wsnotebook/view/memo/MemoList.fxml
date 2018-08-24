@@ -55,6 +55,7 @@
               <items>
                   <Button fx:id="btnLogout" mnemonicParsing="false" text="로그아웃" />
                   <Button fx:id="btnChangePW" mnemonicParsing="false" text="비밀번호 변경" />
+                  <Button fx:id="btnUserDelete" mnemonicParsing="false" text="회원탈퇴" />
                   <Label fx:id="lbUserID" text="ID" />
               </items>
             </ToolBar>

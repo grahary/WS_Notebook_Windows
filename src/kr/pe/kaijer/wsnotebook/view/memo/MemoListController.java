@@ -17,6 +17,7 @@ import javafx.scene.layout.AnchorPane;
 import kr.pe.kaijer.wsnotebook.MainApp;
 import kr.pe.kaijer.wsnotebook.model.Memo;
 import kr.pe.kaijer.wsnotebook.model.MemoDAO;
+import kr.pe.kaijer.wsnotebook.util.DialogUtil;
 import kr.pe.kaijer.wsnotebook.util.EncUtil;
 import static kr.pe.kaijer.wsnotebook.util.DialogUtil.infoDialog;
 import static kr.pe.kaijer.wsnotebook.util.DialogUtil.pwInputDialog;
@@ -25,6 +26,7 @@ public class MemoListController extends AnchorPane {
     @FXML private Label lbUserID;
     @FXML private ComboBox<String> cbSearchType;
     @FXML private TextField tfSearchText;
+    @FXML private Button btnUserDelete;
     @FXML private Button btnChangePW;
     @FXML private Button btnLogout;
     @FXML private Button btnSearch;
@@ -67,6 +69,7 @@ public class MemoListController extends AnchorPane {
 
         tableMemoList.setOnMouseClicked(event -> handleTableItemClicked(event));
 
+        btnUserDelete.setOnAction(event -> handleBtnUserDeleteAction(event));
         btnChangePW.setOnAction(event -> handleBtnChangePWAction(event));
         btnLogout.setOnAction(event -> handleBtnLogoutAction(event));
         btnSearch.setOnAction(event -> handleBtnSearchAction(event));
@@ -122,6 +125,11 @@ public class MemoListController extends AnchorPane {
     private void handleBtnMemoAddAction(ActionEvent event) {
         mainApp.setUserID(userID);
         mainApp.showModalContent("memo/MemoAdd");
+    }
+
+    private void handleBtnUserDeleteAction(ActionEvent event) {
+        mainApp.setUserID(userID);
+        mainApp.showModalContent("user/DeleteUser");
     }
 
     private void handleBtnChangePWAction(ActionEvent event) {

@@ -32,7 +32,7 @@ public class UserDAO {
                 if (userPW.equals(user.getPw())) {
                     return true;
                 } else {
-                    infoDialog("PW를 잘못 입력하셨습니다!");
+                    infoDialog("비밀번호를 잘못 입력하셨습니다!");
                 }
             } else {
                 infoDialog("존재하지 않는 ID 입니다!");
@@ -48,6 +48,35 @@ public class UserDAO {
         String query = "INSERT INTO users VALUES (\"" + user.getId() + "\", \"" + user.getEmail() + "\", \"" + user.getPw() + "\", " + user.getHintQuestion() + ", \"" + user.getHintAnswer() +"\")";
 
         DBUtil.dbExecuteUpdate(query);
+    }
+
+    public static Boolean deleteUser(User user) {
+        String query = "SELECT pw FROM users WHERE id = \"" + user.getId() + "\";";
+
+        ResultSet rs = DBUtil.dbExecuteQuery(query);
+
+        try {
+            if (rs.next()) {
+                BufferedReader br = new BufferedReader(new InputStreamReader(rs.getBinaryStream("pw")));
+                String userPW = DBUtil.blobToSting(br);
+
+                if (userPW.equals(user.getPw())) {
+                    DBUtil.dbExecuteUpdate("DELETE FROM users WHERE id = \"" + user.getId() + "\";");
+
+                    infoDialog("탈퇴가 성공적으로 완료되었습니다.");
+
+                    return true;
+                } else {
+                    infoDialog("비밀번호를 잘못 입력하셨습니다.");
+                }
+            } else {
+                infoDialog("ID를 잘못 입력하셨습니다.");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return false;
     }
 
     public static Boolean searchPW(User user) {

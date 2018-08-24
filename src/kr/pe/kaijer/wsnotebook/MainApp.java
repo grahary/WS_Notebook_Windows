@@ -24,10 +24,7 @@ import kr.pe.kaijer.wsnotebook.view.memo.MemoAddController;
 import kr.pe.kaijer.wsnotebook.view.memo.MemoListController;
 import kr.pe.kaijer.wsnotebook.view.memo.MemoReadController;
 import kr.pe.kaijer.wsnotebook.view.memo.MemoUpdateController;
-import kr.pe.kaijer.wsnotebook.view.user.ChangePWController;
-import kr.pe.kaijer.wsnotebook.view.user.LoginController;
-import kr.pe.kaijer.wsnotebook.view.user.RegisterController;
-import kr.pe.kaijer.wsnotebook.view.user.SearchPWController;
+import kr.pe.kaijer.wsnotebook.view.user.*;
 
 public class MainApp extends Application {
     private Stage stage;
@@ -130,6 +127,11 @@ public class MainApp extends Application {
                 case "user/Register":
                     RegisterController register = loader.getController();
                     register.setModalStage(modalStage);
+                    break;
+                case "user/DeleteUser":
+                    DeleteUserController deleteUser = loader.getController();
+                    deleteUser.setModalStage(this, modalStage);
+                    deleteUser.setUserID(userID);
                     break;
                 case "user/SearchPW":
                     SearchPWController searchPW = loader.getController();
