@@ -90,3 +90,6 @@ WS_Notebook_Windows.iml
 
 *.origin
 src/META-INF/
+
+# 사용된 라이브러리
+!lib/*.jar
