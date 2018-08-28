@@ -36,7 +36,7 @@ public class DBUtil {
 
             conn = DriverManager.getConnection(dbURL, dbID, dbPW);
         } catch (IOException | ClassNotFoundException | SQLException e) {
-            e.printStackTrace();
+            DialogUtil.infoDialog(e.getMessage());
         }
     }
 
